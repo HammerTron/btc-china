@@ -1,7 +1,7 @@
 {
-    "name": "btc-china-fork",
+    "name": "cryptopia-wrapper",
     "version": "0.0.6",
-    "description": "Node.js API wrapper to BTCC (formally BTC China) bitcoin exchange",
+    "description": "Node.js API wrapper to Cryptopia exchange",
     "main": "index.js",
     "dependencies": {
         "cheerio": "0.19.0",
@@ -11,15 +11,15 @@
         "verror": "~1.6.0"
     },
     "keywords": [
-        "BTCC",
-        "BTC China",
+        "HammerTron",
+        "Cryptopia",
         "api",
         "exchange",
         "bitcoin"
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/askmike/btc-china"
+        "url": "https://github.com/HammerTron/cryptopia-wrapper"
     },
     "author": "Nick Addison",
     "license": "MIT"

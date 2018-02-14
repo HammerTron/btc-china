@@ -1,16 +1,16 @@
-var BTCChina = require('btc-china');
+var Cryptopia = require('cryptopia-wrapper');
 
 var since1Minute = new Date().getTime() / 1000 -  60, // convert to seconds then take off 60 seconds
     since1Day = new Date().getTime() / 1000 -  60 * 60 * 24 // convert to seconds then take off 1 day
 
 // Test public data APIs
-var publicClient = new BTCChina();
+var publicClient = new Cryptopia();
 
-// publicClient.getTicker(console.log, 'BTCCNY');
+// publicClient.getTicker(console.log, 'HammerTronNY');
 
-//publicClient.getOrderBook(console.log, 'BTCCNY');
+//publicClient.getOrderBook(console.log, 'HammerTronNY');
 // limit the number of orders on both the bids and asks
-//publicClient.getOrderBook(console.log, 'BTCCNY', 10);
+//publicClient.getOrderBook(console.log, 'HammerTronNY', 10);
 
 // publicClient.getTrades(console.log);
 
@@ -32,7 +32,7 @@ var publicClient = new BTCChina();
 var key = process.argv[2] || 'your-api-key';
 var secret = process.argv[3] || 'your-api-secret';
 
-var privateClient = new BTCChina(key, secret);
+var privateClient = new Cryptopia(key, secret);
 
 // uncomment the API you want to test.
 // Be sure to check the parameters so you don't do any unwanted live trades
@@ -43,23 +43,23 @@ var privateClient = new BTCChina(key, secret);
 // privateClient.getAccountInfo(console.log, 'loan');
 // privateClient.getAccountInfo(console.log, 'balance');
 
-// privateClient.buyOrder2(console.log, 1000, 0.001, 'BTCCNY');
+// privateClient.buyOrder2(console.log, 1000, 0.001, 'HammerTronNY');
 // privateClient.sellOrder2(console.log, 9000, 0.0001);
-// privateClient.createOrder2(console.log, 'buy', 999, 0.0001, 'BTCCNY');
-// privateClient.createOrder2(console.log, 'sell', 8888, 0.0002, 'BTCCNY');
+// privateClient.createOrder2(console.log, 'buy', 999, 0.0001, 'HammerTronNY');
+// privateClient.createOrder2(console.log, 'sell', 8888, 0.0002, 'HammerTronNY');
 // market order
-// privateClient.createOrder2(console.log, 'buy', null, 0.0001, 'BTCCNY');
+// privateClient.createOrder2(console.log, 'buy', null, 0.0001, 'HammerTronNY');
 
 // privateClient.cancelOrder(console.log, 1);
 
 // privateClient.getOrders(console.log);
 // privateClient.getOrders(console.log, false);
-// privateClient.getOrders(console.log, false, 'BTCCNY', 2, 0, since1Day, true);
-// privateClient.getOrders(console.log, false, 'BTCCNY', 2, 0, since1Day, true);
+// privateClient.getOrders(console.log, false, 'HammerTronNY', 2, 0, since1Day, true);
+// privateClient.getOrders(console.log, false, 'HammerTronNY', 2, 0, since1Day, true);
 
 // privateClient.getOrder(console.log, "75479188");
 // privateClient.getOrder(console.log, 1);
-// privateClient.getOrder(console.log, 1, 'BTCCNY', true);
+// privateClient.getOrder(console.log, 1, 'HammerTronNY', true);
 
 // privateClient.getTransactions(console.log);
 // privateClient.getTransactions(console.log, 'all', 10);

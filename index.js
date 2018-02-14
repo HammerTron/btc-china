@@ -5,19 +5,19 @@ var util = require('util'),
     VError = require('verror'),
     cheerio = require('cheerio');
 
-var BTCChina = function BTCChina(key, secret, server, timeout)
+var Cryptopia = function Cryptopia(key, secret, server, timeout)
 {
     this.key = key;
     this.secret = secret;
 
-    this.server = server || 'https://api.btcchina.com';
+    this.server = server || 'https://api.cryptopia.co.nz.com';
 
     this.timeout = timeout || 30000;
 };
 
-BTCChina.prototype.privateRequest = function(method, params, callback)
+Cryptopia.prototype.privateRequest = function(method, params, callback)
 {
-    var functionName = 'BTCChina.privateRequest()',
+    var functionName = 'Cryptopia.privateRequest()',
         self = this;
 
     if(!this.key || !this.secret)
@@ -52,7 +52,7 @@ BTCChina.prototype.privateRequest = function(method, params, callback)
     var signature = new Buffer(this.key + ':' + hmac).toString('base64');
 
     var headers = {
-        "User-Agent": "BTC China Javascript API Client",
+        "User-Agent": "Cryptopia Javascript API Client",
         'Authorization': 'Basic ' + signature,
         'Json-Rpc-Tonce': tonce
     };
@@ -73,9 +73,9 @@ BTCChina.prototype.privateRequest = function(method, params, callback)
     executeRequest(options, requestDesc, callback);
 };
 
-BTCChina.prototype.publicRequest = function(method, params, callback)
+Cryptopia.prototype.publicRequest = function(method, params, callback)
 {
-    var functionName = 'BTCChina.publicRequest()';
+    var functionName = 'Cryptopia.publicRequest()';
 
     if(!_.isObject(params))
     {
@@ -89,15 +89,15 @@ BTCChina.prototype.publicRequest = function(method, params, callback)
         return callback(error);
     }
 
-    var headers = {"User-Agent": "BTC China Javascript API Client"};
+    var headers = {"User-Agent": "Cryptopia Javascript API Client"};
 
     // TODO need a better way of handling trades using a different API
-    // note the doco says ticker and order book should use https://data.btcchina.com but it doesn't work
-    // support have advised ticket and order book need to use 'https://api.btcchina.com'
+    // note the doco says ticker and order book should use https://data.cryptopia.co.nz.com but it doesn't work
+    // support have advised ticket and order book need to use 'https://api.cryptopia.co.nz.com'
     var url;
     if (method === 'trades')
     {
-        url = 'https://data.btcchina.com/data/' + method;
+        url = 'https://data.cryptopia.co.nz.com/data/' + method;
     }
     else
     {
@@ -121,7 +121,7 @@ BTCChina.prototype.publicRequest = function(method, params, callback)
 
 function executeRequest(options, requestDesc, callback)
 {
-    var functionName = 'BTCChina.executeRequest()';
+    var functionName = 'Cryptopia.executeRequest()';
 
     request(options, function(err, response, data)
     {
@@ -175,12 +175,12 @@ function constructParamArray(args, maxArgs)
 // Public Functions
 //
 
-BTCChina.prototype.getTicker = function getTicker(callback, market)
+Cryptopia.prototype.getTicker = function getTicker(callback, market)
 {
     this.publicRequest('ticker', {market: market}, callback);
 };
 
-BTCChina.prototype.getOrderBook = function getOrderBook(callback, market, limit)
+Cryptopia.prototype.getOrderBook = function getOrderBook(callback, market, limit)
 {
     var params = {market: market};
 
@@ -190,12 +190,12 @@ BTCChina.prototype.getOrderBook = function getOrderBook(callback, market, limit)
     this.publicRequest('orderbook', params, callback);
 };
 
-BTCChina.prototype.getHistoryData = function getHistoryData(callback, params)
+Cryptopia.prototype.getHistoryData = function getHistoryData(callback, params)
 {
     this.publicRequest('historydata', params, callback);
 };
 
-BTCChina.prototype.getTrades = function getTrades(callback, market, params)
+Cryptopia.prototype.getTrades = function getTrades(callback, market, params)
 {
     params = _.extend({market: market, sincetype: 'time'}, params);
 
@@ -206,14 +206,14 @@ BTCChina.prototype.getTrades = function getTrades(callback, market, params)
 // Private Functions
 //
 
-BTCChina.prototype.buyOrder2 = function buyOrder2(callback, price, amount, market)
+Cryptopia.prototype.buyOrder2 = function buyOrder2(callback, price, amount, market)
 {
     var params = constructParamArray(arguments, 3);
 
     this.privateRequest('buyOrder2', params, callback);
 };
 
-BTCChina.prototype.sellOrder2 = function sellOrder2(callback, price, amount, market)
+Cryptopia.prototype.sellOrder2 = function sellOrder2(callback, price, amount, market)
 {
     var params = constructParamArray(arguments, 3);
 
@@ -221,9 +221,9 @@ BTCChina.prototype.sellOrder2 = function sellOrder2(callback, price, amount, mar
 };
 
 // calls either buyOrder2 or sellOrder2 functions depending on the second type parameter
-BTCChina.prototype.createOrder2 = function createOrder2(callback, type, price, amount, market)
+Cryptopia.prototype.createOrder2 = function createOrder2(callback, type, price, amount, market)
 {
-    var functionName = 'BTCChina.createOrder2()',
+    var functionName = 'Cryptopia.createOrder2()',
         // rest removes the first element of the array
         params = constructParamArray(_.rest(arguments), 3);
 
@@ -242,70 +242,70 @@ BTCChina.prototype.createOrder2 = function createOrder2(callback, type, price, a
     }
 };
 
-BTCChina.prototype.cancelOrder = function cancelOrder(callback, id, market)
+Cryptopia.prototype.cancelOrder = function cancelOrder(callback, id, market)
 {
     var params = constructParamArray(arguments, 2);
 
     this.privateRequest('cancelOrder', params, callback);
 };
 
-BTCChina.prototype.getOrders = function getOrders(callback, openOnly, market, limit, offset, since, withDetail)
+Cryptopia.prototype.getOrders = function getOrders(callback, openOnly, market, limit, offset, since, withDetail)
 {
     var params = constructParamArray(arguments, 6);
 
     this.privateRequest('getOrders', params, callback);
 };
 
-BTCChina.prototype.getOrder = function getOrder(callback, id, market, withDetail)
+Cryptopia.prototype.getOrder = function getOrder(callback, id, market, withDetail)
 {
     var params = constructParamArray(arguments, 3);
 
     this.privateRequest('getOrder', params, callback);
 };
 
-BTCChina.prototype.getTransactions = function getTransactions(callback, type, limit, offset, since, sinceType)
+Cryptopia.prototype.getTransactions = function getTransactions(callback, type, limit, offset, since, sinceType)
 {
     var params = constructParamArray(arguments, 5);
 
     this.privateRequest('getTransactions', params, callback);
 };
 
-BTCChina.prototype.getMarketDepth2 = function getMarketDepth2(callback, limit, market)
+Cryptopia.prototype.getMarketDepth2 = function getMarketDepth2(callback, limit, market)
 {
     var params = constructParamArray(arguments, 2);
 
     this.privateRequest('getMarketDepth2', params, callback);
 };
 
-BTCChina.prototype.getDeposits = function getDeposits(callback, currency, pendingOnly)
+Cryptopia.prototype.getDeposits = function getDeposits(callback, currency, pendingOnly)
 {
     var params = constructParamArray(arguments, 2);
 
     this.privateRequest('getDeposits', params, callback);
 };
 
-BTCChina.prototype.getWithdrawal = function getWithdrawal(callback, id, currency)
+Cryptopia.prototype.getWithdrawal = function getWithdrawal(callback, id, currency)
 {
     var params = constructParamArray(arguments, 2);
 
     this.privateRequest('getWithdrawal', params, callback);
 };
 
-BTCChina.prototype.getWithdrawals = function getWithdrawals(callback, currency, pendingOnly)
+Cryptopia.prototype.getWithdrawals = function getWithdrawals(callback, currency, pendingOnly)
 {
     var params = constructParamArray(arguments, 2);
 
     this.privateRequest('getWithdrawals', params, callback);
 };
 
-BTCChina.prototype.requestWithdrawal = function requestWithdrawal(callback, currency, amount)
+Cryptopia.prototype.requestWithdrawal = function requestWithdrawal(callback, currency, amount)
 {
     var params = constructParamArray(arguments, 2);
 
     this.privateRequest('requestWithdrawal', params, callback);
 };
 
-BTCChina.prototype.getAccountInfo = function getAccountInfo(callback, type)
+Cryptopia.prototype.getAccountInfo = function getAccountInfo(callback, type)
 {
     var params = constructParamArray(arguments, 1);
 
@@ -313,12 +313,12 @@ BTCChina.prototype.getAccountInfo = function getAccountInfo(callback, type)
 };
 
 /**
- * Screen scraps the fiat deposit and withdrawal exchange rates from BTCC's website
+ * Screen scraps the fiat deposit and withdrawal exchange rates from HammerTron's website
  * @param callback (err: Error, depositRate: number, withdrawalRate: number): void
  * @param baseCurrency USD in USD/CNY
  * @param quoteCurrency CNY in USD/CNY
  */
-BTCChina.prototype.getFiatExchangeRates = function getFiatExchangeRates(callback, baseCurrency, quoteCurrency)
+Cryptopia.prototype.getFiatExchangeRates = function getFiatExchangeRates(callback, baseCurrency, quoteCurrency)
 {
     var options = {
         url: "https://exchange.btcc.com/page/internationalvoucher",
@@ -403,4 +403,4 @@ function parserRates(baseCurrency, quoteCurrency, html)
     }
 }
 
-module.exports = BTCChina;
+module.exports = Cryptopia;
